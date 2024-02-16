@@ -13,9 +13,7 @@
 
   var parsed = d3.csvParse(csv);
 
-  // sorts data from parsed into an array of arrays, 
-  // with each array being a dataset for a year
-  function date_sort(parsed) { 
+  function date_sort(parsed) {
     parsed.forEach(item => {
       const date = new Date(item.date);
       const year = date.getFullYear(); // Use getFullYear() instead of getYear()
@@ -72,4 +70,3 @@
     line-height: 2;
   }
 </style>
-
