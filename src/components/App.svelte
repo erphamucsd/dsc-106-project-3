@@ -10,24 +10,27 @@
     'https://raw.githubusercontent.com/erphamucsd/dsc-106-project-3/main/assets/Sea_Surface_Temp_Cleaned.csv',
   );
   const csv = await res.text();
-
   var parsed = d3.csvParse(csv);
 
-  function date_sort(parsed) {
-    parsed.forEach(item => {
+  // Sorts csv file by year into an array of arrays, with each inner array
+  // representing a dataset for the year and containing date/temp objects
+  function date_sort(parsed_csv) {
+    const data = parsed_csv.reduce((acc, item) => {
       const date = new Date(item.date);
-      const year = date.getFullYear(); // Use getFullYear() instead of getYear()
-      if (!data[year]) {
-        data[year] = []; // Initialize array for each year if not already done
+      const year = date.getFullYear();
+      if (!acc[year]) {
+        acc[year] = []; // Initialize array for each year if not already done
       }
-      data[year].push({'date':date, 'value': Number(item.sst)});
-    });
-    return data; // Return the sorted data
-  }
-  data = date_sort(parsed)
-  console.log(date_sort(parsed)); // Output the sorted data   
+      acc[year].push({'date': date, 'value': Number(item.sst)});
+      return acc;
+    }, []);
+    return Object.values(data); // Return the sorted data as an array of arrays
+}
 
-  });
+  data = date_sort(parsed)
+  console.log(data); // Output the sorted data   
+ 
+});
 </script>
 
 <main>
