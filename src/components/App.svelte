@@ -31,11 +31,38 @@
   console.log(data); // Output the sorted data   
  
 });
+
+  function update(selectedGroup) {
+
+        // Create new data with the selection?
+        var dataFilter = data.filter(function(d){return d.name==selectedGroup})
+
+        // Give these new data to update line
+        line
+            .datum(dataFilter)
+            .transition()
+            .duration(1000)
+            .attr("d", d3.line()
+              .x(function(d) { return x(d.year) })
+              .y(function(d) { return y(+d.n) })
+            )
+            .attr("stroke", function(d){ return myColor(selectedGroup) })
+      }
+
+      // When the button is changed, run the updateChart function
+      d3.select("#selectButton").on("change", function(d) {
+          // recover the option that has been chosen
+          var selectedOption = d3.select(this).property("value")
+          // run the updateChart function with this selected option
+          update(selectedOption)
+      })
+
 </script>
 
 <main>
   <h1>Global Sea Surface Temperature Trends</h1>
   <Temperature {data} />
+  <input placeholder="Year" value="" />
 </main>
 
 <style>
@@ -71,5 +98,10 @@
     font-size: 2em;
     font-weight: 300;
     line-height: 2;
+  }
+
+  input {
+    top: 200;
+    left: 200;
   }
 </style>
