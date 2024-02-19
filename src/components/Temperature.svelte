@@ -1,6 +1,7 @@
 <script>
   import * as d3 from 'd3';
 
+  // Assuming data is an array of arrays where each inner array represents data for a different year
   export let data;
 
   const width = 928;
@@ -10,130 +11,69 @@
   const marginBottom = 30;
   const marginLeft = 40;
 
-  let svg;
-
-  // Placeholders for the axis elements.
   let gx;
   let gy;
-
-  // Assuming data is an array of arrays, each inner array represents a dataset
-  // Each inner array contains objects with 'date' and 'value' properties
-  // Example: [[{ date: new Date(), value: 10 }, { date: new Date(), value: 15 }], [{ date: new Date(), value: 20 }, { date: new Date(), value: 25 }]]
   
+  // Domain spans 2000 only so that we can use a base year to place all the lines
   $: x = d3
-    .scaleUtc()
-    .domain([
-      d3.min(data, dataset => d3.min(dataset, d => d.date)),
-      d3.max(data, dataset => d3.max(dataset, d => d.date))
-    ])
-    .range([marginLeft, width - marginRight]);
+      .scaleTime()
+      .domain([
+          new Date(2000, 0, 1), // January 1, 2000
+          new Date(2000, 11, 31) // December 31, 2000
+      ])
+      .range([marginLeft, width - marginRight]);
 
+  // Uses flatmap, which turns the nested arrays into one array and finds min/max
   $: y = d3
-    .scaleLinear()
-    .domain([
-      d3.min(data, dataset => d3.min(dataset, d => d.value)),
-      d3.max(data, dataset => d3.max(dataset, d => d.value))
-    ])
-    .nice()
-    .range([height - marginBottom, marginTop]);
+      .scaleLinear()
+      .domain([
+          d3.min(data.flatMap(d => d.map(item => item.value))),
+          d3.max(data.flatMap(d => d.map(item => item.value)))
+      ])
+      .range([height - marginBottom, marginTop]);
 
-  // Create a symmetric diverging color scale.
-  $: max = d3.max(data.flat(), (d) => Math.abs(d.value));
+  // Generates the line for each year's dataset using the month, date, and temp value
+  $: lineGenerator = d3.line()
+      .x(d => x(new Date(2000, d.date.getMonth(), d.date.getDate()))) // Using base year 2000 to ensure consistent plotting
+      .y(d => y(d.value));
 
-  $: color = d3
-    .scaleSequential()
-    .domain([max, -max])
-    .interpolator(d3.interpolateRdBu);
+  // Creates a color scale for all the years from 1978-2024, with
+  // red representing later years and blue representing earlier years
+  $: color = d3.scaleSequential()
+      .domain([0, data.length - 1]) // Domain from 0 to the number of years - 1
+      .interpolator(t => d3.interpolateRdYlBu(1 - t)); // Interpolate from blue to red
 
-  $: d3.select(gx).call(d3.axisBottom(x).ticks(width / 80));
-  $: d3.select(gy)
-    .call(d3.axisLeft(y).ticks(null, '+'))
-    // zero line
-    .call((g) =>
-      g
-        .selectAll('.tick line')
-        .clone()
-        .attr('x2', width - marginRight - marginLeft)
-        .attr('stroke-opacity', (d) => (d === 0 ? 1 : 0.1)),
-    );
-
-  const line = d3
-    .line()
-    .x((d) => x(d.date))
-    .y((d) => y(d.value));
-
-  const bisect = d3.bisector((d) => d.date).center;
-  let tooltipPt = null;
-  // function onPointerMove(event) {
-  //   const i = bisect(data[0], x.invert(d3.pointer(event)[0])); // assuming all datasets have the same x values
-  //   tooltipPt = data[0][i]; // assuming using the first dataset for tooltip
-  // }
-  function onPointerMove(event) {
-    let closestDataPoint = null;
-    let closestDistance = Infinity;
-
-    data.forEach(dataset => {
-      const i = bisect(dataset, x.invert(d3.pointer(event)[0]));
-      const currentDataPoint = dataset[i];
-      if (currentDataPoint) {
-        const distance = Math.abs(x(currentDataPoint.date) - d3.pointer(event)[0]);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestDataPoint = currentDataPoint;
-        }
-      }
-    });
-
-    tooltipPt = closestDataPoint;
-  }
-  function onPointerLeave(event) {
-    tooltipPt = null;
+  // Create the axes
+  $: {
+    if (gx) d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b"))); // Set the tick format to display only the month abbreviation
+    if (gy) d3.select(gy).call(d3.axisLeft(y));
   }
 
-  $: d3.select(svg)
-    .on('pointerenter pointermove', onPointerMove)
-    .on('pointerleave', onPointerLeave);
 </script>
 
 <div class="temperature-plot">
   <svg
-    bind:this={svg}
     {width}
     {height}
-    viewBox="0 0 {width} {height}"
+    viewBox={`0 0 ${width} ${height}`}
     style="max-width: 100%; height: auto;"
   >
-    <!-- x-axis -->
-    <g bind:this={gx} transform="translate(0,{height - marginBottom})" />
-    <!-- y-axis -->
-    <g bind:this={gy} transform="translate({marginLeft},0)">
-      <text
-        x="5"
-        y={marginTop}
-        dy="0.32em"
-        fill="#000"
-        font-weight="bold"
-        text-anchor="start"
-      >
-        Anomaly (°C)
-      </text>
-    </g>
+    <!-- Add X axis -->
+    <g bind:this={gx} transform={`translate(0, ${height - marginBottom})`} />
+    <!-- Add Y axis -->
+    <g bind:this={gy} transform={`translate(${marginLeft}, 0)`} />
 
-    <!-- lines -->
-    {#each data as dataset, i}
-      <path
-        d={line(dataset)}
-        fill="none"
-        stroke={color(i)} 
-        stroke-width="1.5"
-      />
-    {/each}
-
-    <!-- tooltip -->
-    {#if tooltipPt}
-      <g transform="translate({x(tooltipPt.date)},{y(tooltipPt.value)})">
-        <text font-weight="bold">{tooltipPt.value}</text>
+    <!-- Loop through each set of data for a different year -->
+    {#each data as yearData, i}
+      <g stroke="#000" stroke-opacity="0.3">
+        <path
+          key={i}
+          fill="none"
+          stroke={color(i)}
+          stroke-width="3" 
+          d={lineGenerator(yearData)} 
+        />
       </g>
-    {/if}
+    {/each}
   </svg>
 </div>
