@@ -5,6 +5,7 @@
  
   let data = [];
   let filtered_data = [];
+  let decades = [];
 
   onMount(async () => {
   const res = await fetch(
@@ -31,17 +32,23 @@
   data = Object.values(date_sort(parsed))
   console.log(date_sort(parsed)); // Output the sorted data
 
-  function filter_data(data_dict, start, end) {
+  function filter_data (data_dict, start, end) {
     for (let key in data_dict) {
       if (parseInt(key) > start && parseInt(key) < end) {
           filtered_data[key] = data_dict[key];
       }
+      decades.push(key)
     }
     return filtered_data;
   }
-  
-  data = Object.values(filter_data(date_sort(parsed), 1978, 2025))
 
+  // testing some things
+  filtered_data = Object.values(filter_data(date_sort(parsed), 1990, 2025))
+  console.log(filtered_data)
+  console.log(Object.entries(filtered_data))
+  console.log(Object.entries(data))
+  console.log(decades)
+  
 
   // When the button is changed, run the updateChart function
   d3.select("#selectButton").on("change", function(d) {
@@ -51,13 +58,25 @@
     update(selectedOption)
   })
   });
+  let start_year_text = "";
+  let end_year_text = "";
 
 </script>
+
 
 <main>
   <h1>Global Sea Surface Temperature Trends</h1>
   <Temperature {data} />
-  <input placeholder="Year" value="" />
+  <input 
+    placeholder="Start Year" 
+    bind:value={start_year_text} />
+  <input 
+    placeholder="End Year"
+    bind:value={end_year_text} />
+  <button on:click={() => filter_data(data, start_year_text, end_year_text)}>
+        Filter
+  </button>
+
 </main>
 
 <style>
