@@ -47,7 +47,9 @@
       decades.push(key)
     }
     console.log(filtered_data)
-    return filtered_data;
+    data = Object.values(filtered_data)
+    console.log(data)
+    return data;
   }
 
   // testing some things
