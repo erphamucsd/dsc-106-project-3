@@ -41,7 +41,7 @@
   function filter_data(data_dict, start, end) {
     let filtered_data = [];
     for (let key in data_dict) {
-      if (parseInt(key) > start && parseInt(key) < end) {
+      if (parseInt(key) >= start && parseInt(key) <= end) {
           filtered_data[key] = data_dict[key];
       }
       decades.push(key)
