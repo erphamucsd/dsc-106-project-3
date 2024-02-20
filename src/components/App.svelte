@@ -67,6 +67,7 @@
       <Temperature {data} />
     </div>
     <div class="content">
+      <p>Type the years here:</p>
       <input 
         placeholder="Start Year" 
         bind:value={start_year_text} />
@@ -115,10 +116,12 @@
     font-weight: 300;
     line-height: 2;
   }
+  
   .container{
     display: flex;
     justify-content: center;
   }
+
   .content{
     display: flex;
     flex-direction: column;
@@ -126,20 +129,24 @@
     gap: 10px;
     justify-content: center;
   }
-  .content :third-child{
-    width: 20px;
+
+  p {
+    font-size: 0.8em;
   }
+
   input {
     top: 200;
     left: 200;
     font-family: 'Nunito', sans-serif;
+    width: 150px;
+    margin-left: 10px;
   }
 
   button {
     font-family: 'Nunito', sans-serif;
     width: 50px;
     text-align: center;
-    margin-left: 50px;
+    margin-left: 60px;
     margin-top: 5px;
   }
 </style>

@@ -3,7 +3,6 @@
 
   // Assuming data is an array of arrays where each inner array represents data for a different year
   export let data;
-  // export let decades;
 
   const width = 800;
   const height = 440;
@@ -91,19 +90,10 @@
         stroke={color(i)}
         stroke-width="3"
         d={lineGenerator(yearData)} 
+        on:mouseover={event => showTooltip(event, yearData)}
+        on:mousemove={event => showTooltip(event, yearData)}
+        on:mouseout={hideTooltip}
       />
-      <!-- Annotation for each line -->
-      <text
-        x={getLabelPosition(yearData).x}
-        y={getLabelPosition(yearData).y}
-        dx="5" 
-        dy="-5" 
-        fill={color(i)}
-        font-size="10px"
-        text-anchor="start"
-      >
-        {`${yearData[0].date.getUTCFullYear()}`}
-      </text>
     {/each}
 
     <!-- Y-axis label -->
@@ -117,36 +107,5 @@
       transform={`translate(${width/2},${height})`}
       font-size=14
       >Month</text>
-
-    <!-- Vanessa's code
-
-      {#each data as yearData, i}
-      // if the year is in the filtered dataset, then make it a different color
-      {#if yearData in decades}
-        <g stroke="#000" stroke-opacity="0.3">
-        <path
-          key={i}
-          fill="none"
-          stroke={"black"}
-          stroke-width="3" 
-          d={lineGenerator(yearData)} 
-        />
-      </g>
-    {:else}
-      <g stroke="#000" stroke-opacity="0.3">
-        <path
-          key={i}
-          fill="none"
-          stroke={color(i)}
-          stroke-width="3"
-          d={lineGenerator(yearData)}
-        />
-      </g>
-     {/if}
-      
-    {/each}
-
-    -->
-
   </svg>
 </div>
