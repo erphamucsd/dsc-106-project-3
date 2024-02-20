@@ -5,8 +5,8 @@
   export let data;
   // export let decades;
 
-  const width = 928;
-  const height = 600;
+  const width = 800;
+  const height = 440;
   const marginTop = 20;
   const marginRight = 30;
   const marginBottom = 30;

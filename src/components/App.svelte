@@ -5,7 +5,8 @@
  
   let data = [];
   let data_dict = [];
-  let decades = [];
+  let start_year_text = "";
+  let end_year_text = "";
 
   onMount(async () => {
   const res = await fetch(
@@ -31,20 +32,21 @@
   
   data_dict = date_sort(parsed)
   data = Object.values(date_sort(parsed))
-  console.log(date_sort(parsed)); // Output the sorted data
 
   });
-
-  let start_year_text = "";
-  let end_year_text = "";
 
   function filter_data(data_dict, start, end) {
     let filtered_data = [];
     for (let key in data_dict) {
-      if (parseInt(key) >= start && parseInt(key) <= end) {
+      if (end == "") {
+        if (parseInt(key) >= start) {
           filtered_data[key] = data_dict[key];
+        }
+      } else {
+        if (parseInt(key) >= start && parseInt(key) <= end) {
+          filtered_data[key] = data_dict[key];
+        }
       }
-      decades.push(key)
     }
     console.log(filtered_data)
     data = Object.values(filtered_data)
@@ -105,7 +107,7 @@
   }
 
   h1 {
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: 300;
     line-height: 2;
   }
