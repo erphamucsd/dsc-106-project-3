@@ -4,6 +4,7 @@
   import Temperature from './Temperature.svelte';
  
   let data = [];
+  let filtered_data = [];
 
   onMount(async () => {
   const res = await fetch(
@@ -17,45 +18,39 @@
   function date_sort(parsed_csv) {
     const data = parsed_csv.reduce((acc, item) => {
       const date = new Date(item.date);
-      const year = date.getFullYear();
+      const year = date.getUTCFullYear();
       if (!acc[year]) {
         acc[year] = []; // Initialize array for each year if not already done
       }
       acc[year].push({'date': date, 'value': Number(item.sst)});
       return acc;
     }, []);
-    return Object.values(data); // Return the sorted data as an array of arrays
-}
+    return data; // Return the sorted data as an array of arrays
+  }
 
-  data = date_sort(parsed)
-  console.log(data); // Output the sorted data   
- 
-});
+  data = Object.values(date_sort(parsed))
+  console.log(date_sort(parsed)); // Output the sorted data
 
-  function update(selectedGroup) {
-
-        // Create new data with the selection?
-        var dataFilter = data.filter(function(d){return d.name==selectedGroup})
-
-        // Give these new data to update line
-        line
-            .datum(dataFilter)
-            .transition()
-            .duration(1000)
-            .attr("d", d3.line()
-              .x(function(d) { return x(d.year) })
-              .y(function(d) { return y(+d.n) })
-            )
-            .attr("stroke", function(d){ return myColor(selectedGroup) })
+  function filter_data(data_dict, start, end) {
+    for (let key in data_dict) {
+      if (parseInt(key) > start && parseInt(key) < end) {
+          filtered_data[key] = data_dict[key];
       }
+    }
+    return filtered_data;
+  }
+  
+  data = Object.values(filter_data(date_sort(parsed), 1978, 2025))
 
-      // When the button is changed, run the updateChart function
-      d3.select("#selectButton").on("change", function(d) {
-          // recover the option that has been chosen
-          var selectedOption = d3.select(this).property("value")
-          // run the updateChart function with this selected option
-          update(selectedOption)
-      })
+
+  // When the button is changed, run the updateChart function
+  d3.select("#selectButton").on("change", function(d) {
+    // recover the option that has been chosen
+    var selectedOption = d3.select(this).property("value")
+    // run the updateChart function with this selected option
+    update(selectedOption)
+  })
+  });
 
 </script>
 
