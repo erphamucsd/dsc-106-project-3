@@ -3,7 +3,7 @@
 
   // Assuming data is an array of arrays where each inner array represents data for a different year
   export let data;
-  export let filtered_data;
+  // export let decades;
 
   const width = 928;
   const height = 600;
@@ -66,6 +66,20 @@
 
     <!-- Loop through each set of data for a different year -->
     {#each data as yearData, i}
+      <g stroke="#000" stroke-opacity="0.3">
+        <path
+          key={i}
+          fill="none"
+          stroke={color(i)}
+          stroke-width="3" 
+          d={lineGenerator(yearData)} 
+        />
+      </g>
+    {/each}
+
+    <!-- Vanessa's code
+
+      {#each data as yearData, i}
       // if the year is in the filtered dataset, then make it a different color
       {#if yearData in decades}
         <g stroke="#000" stroke-opacity="0.3">
@@ -90,6 +104,8 @@
      {/if}
       
     {/each}
+
+    -->
 
   </svg>
 </div>

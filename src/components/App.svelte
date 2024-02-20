@@ -4,7 +4,7 @@
   import Temperature from './Temperature.svelte';
  
   let data = [];
-  let filtered_data = [];
+  let data_dict = [];
   let decades = [];
 
   onMount(async () => {
@@ -28,41 +28,36 @@
     }, []);
     return data; // Return the sorted data as an array of arrays
   }
-
+  
+  data_dict = date_sort(parsed)
   data = Object.values(date_sort(parsed))
   console.log(date_sort(parsed)); // Output the sorted data
 
-  function filter_data (data_dict, start, end) {
+  });
+
+  let start_year_text = "";
+  let end_year_text = "";
+
+  function filter_data(data_dict, start, end) {
+    let filtered_data = [];
     for (let key in data_dict) {
       if (parseInt(key) > start && parseInt(key) < end) {
           filtered_data[key] = data_dict[key];
       }
       decades.push(key)
     }
+    console.log(filtered_data)
     return filtered_data;
   }
 
   // testing some things
-  filtered_data = Object.values(filter_data(date_sort(parsed), 1990, 2025))
-  console.log(filtered_data)
-  console.log(Object.entries(filtered_data))
-  console.log(Object.entries(data))
-  console.log(decades)
-  
-
-  // When the button is changed, run the updateChart function
-  d3.select("#selectButton").on("change", function(d) {
-    // recover the option that has been chosen
-    var selectedOption = d3.select(this).property("value")
-    // run the updateChart function with this selected option
-    update(selectedOption)
-  })
-  });
-  let start_year_text = "";
-  let end_year_text = "";
+  // filtered_data = Object.values(filter_data(date_sort(parsed), 1990, 2025))
+  // console.log(filtered_data)
+  // console.log(Object.entries(filtered_data))
+  // console.log(Object.entries(data))
+  //console.log(decades)
 
 </script>
-
 
 <main>
   <h1>Global Sea Surface Temperature Trends</h1>
@@ -73,10 +68,9 @@
   <input 
     placeholder="End Year"
     bind:value={end_year_text} />
-  <button on:click={() => filter_data(data, start_year_text, end_year_text)}>
-        Filter
+  <button on:click={filter_data(data_dict, start_year_text, end_year_text)}>
+  Filter
   </button>
-
 </main>
 
 <style>
