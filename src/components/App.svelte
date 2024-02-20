@@ -48,9 +48,7 @@
         }
       }
     }
-    console.log(filtered_data)
     data = Object.values(filtered_data)
-    console.log(data)
     return data;
   }
 
