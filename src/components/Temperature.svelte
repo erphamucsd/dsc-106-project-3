@@ -9,8 +9,8 @@
   const height = 440;
   const marginTop = 20;
   const marginRight = 30;
-  const marginBottom = 30;
-  const marginLeft = 40;
+  const marginBottom = 35;
+  const marginLeft = 58;
 
   let gx;
   let gy;
@@ -50,6 +50,14 @@
     if (gy) d3.select(gy).call(d3.axisLeft(y));
   }
 
+  // Function to get the label position for the last point of each line
+  function getLabelPosition(data) {
+    const lastPoint = data[data.length - 1];
+    return {
+      x: x(new Date(2000, lastPoint.date.getUTCMonth(), lastPoint.date.getUTCDate())),
+      y: y(lastPoint.value)
+    };
+  }
 </script>
 
 <div class="temperature-plot">
@@ -66,16 +74,38 @@
 
     <!-- Loop through each set of data for a different year -->
     {#each data as yearData, i}
-      <g stroke="#000" stroke-opacity="0.3">
-        <path
-          key={i}
-          fill="none"
-          stroke={color(i)}
-          stroke-width="3" 
-          d={lineGenerator(yearData)} 
-        />
-      </g>
+      <path
+        key={i}
+        fill="none"
+        stroke={color(i)}
+        stroke-width="3"
+        d={lineGenerator(yearData)} 
+      />
+      <!-- Annotation for each line -->
+      <text
+        x={getLabelPosition(yearData).x}
+        y={getLabelPosition(yearData).y}
+        dx="5" 
+        dy="-5" 
+        fill={color(i)}
+        font-size="10px"
+        text-anchor="start"
+      >
+        {`${yearData[0].date.getUTCFullYear()}`}
+      </text>
     {/each}
+
+    <!-- Y-axis label -->
+    <text  
+      transform={`translate(${14},${2*height  /  3}) rotate(-90)`}
+      font-size=14
+      >Temperature (Celsius)</text>
+
+    <!-- X-axis label -->
+    <text  
+      transform={`translate(${width/2},${height})`}
+      font-size=14
+      >Month</text>
 
     <!-- Vanessa's code
 
