@@ -1,4 +1,5 @@
-# create-svelte
+# Global Sea Surface Temperatures
+By Vanessa Hu, Eric Pham, Katelyn Wong
 
 ## Generate static site using svelte SSG
 
