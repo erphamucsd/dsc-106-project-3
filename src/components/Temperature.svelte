@@ -18,8 +18,8 @@
   $: x = d3
       .scaleTime()
       .domain([
-          new Date(2000, 0, 1), // January 1, 2000
-          new Date(2000, 11, 31) // December 31, 2000
+          new Date(Date.UTC(2000, 0, 1)), // January 1, 2000
+          new Date(Date.UTC(2000, 11, 31)) // December 31, 2000
       ])
       .range([marginLeft, width - marginRight]);
 
@@ -27,14 +27,14 @@
   $: y = d3
       .scaleLinear()
       .domain([
-          d3.min(data.flatMap(d => d.map(item => item.value))),
-          d3.max(data.flatMap(d => d.map(item => item.value)))
+          d3.min(data.flatMap(d => d.map(item => item.value))) - 0.1,
+          d3.max(data.flatMap(d => d.map(item => item.value))) + 0.1
       ])
       .range([height - marginBottom, marginTop]);
 
   // Generates the line for each year's dataset using the month, date, and temp value
   $: lineGenerator = d3.line()
-      .x(d => x(new Date(2000, d.date.getMonth(), d.date.getDate()))) // Using base year 2000 to ensure consistent plotting
+      .x(d => x(new Date(2000, d.date.getUTCMonth(), d.date.getUTCDate()))) // Using base year 2000 to ensure consistent plotting
       .y(d => y(d.value));
 
   // Creates a color scale for all the years from 1978-2024, with
