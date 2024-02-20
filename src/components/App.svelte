@@ -58,21 +58,27 @@
   // console.log(Object.entries(filtered_data))
   // console.log(Object.entries(data))
   //console.log(decades)
-
 </script>
 
 <main>
   <h1>Global Sea Surface Temperature Trends</h1>
-  <Temperature {data} />
-  <input 
-    placeholder="Start Year" 
-    bind:value={start_year_text} />
-  <input 
-    placeholder="End Year"
-    bind:value={end_year_text} />
-  <button on:click={filter_data(data_dict, start_year_text, end_year_text)}>
-  Filter
-  </button>
+  <div class="container">
+    <div class="wrapper">
+      <Temperature {data} />
+    </div>
+    <div class="content">
+      <input 
+        placeholder="Start Year" 
+        bind:value={start_year_text} />
+      <input 
+        placeholder="End Year"
+        bind:value={end_year_text} />
+      <button on:click={filter_data(data_dict, start_year_text, end_year_text)}>
+      Filter
+      </button>
+    </div>
+  </div>
+  
 </main>
 
 <style>
@@ -109,9 +115,31 @@
     font-weight: 300;
     line-height: 2;
   }
-
+  .container{
+    display: flex;
+    justify-content: center;
+  }
+  .content{
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    gap: 10px;
+    justify-content: center;
+  }
+  .content :third-child{
+    width: 20px;
+  }
   input {
     top: 200;
     left: 200;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  button {
+    font-family: 'Nunito', sans-serif;
+    width: 50px;
+    text-align: center;
+    margin-left: 50px;
+    margin-top: 5px;
   }
 </style>

@@ -58,6 +58,17 @@
       y: y(lastPoint.value)
     };
   }
+  function showTooltip(event, yearData) {
+    const [year, value] = [yearData[0].date.getUTCFullYear(), yearData[yearData.length - 1].value]; // Example: year and the last value
+    tooltip.innerHTML = `Year: ${year}<br>Value: ${value}`;
+    tooltip.style.visibility = 'visible';
+    tooltip.style.left = `${event.pageX + 15}px`;
+    tooltip.style.top = `${event.pageY + 15}px`;
+  }
+
+  function hideTooltip() {
+    tooltip.style.visibility = 'hidden';
+  }
 </script>
 
 <div class="temperature-plot">
