@@ -4,6 +4,7 @@
   import Temperature from './Temperature.svelte';
  
   let data = [];
+  let plotting_data = [];
   let data_dict = [];
   let start_year_text = "";
   let end_year_text = "";
@@ -32,7 +33,6 @@
   
   data_dict = date_sort(parsed)
   data = Object.values(date_sort(parsed))
-
   });
 
   function filter_data(data_dict, start, end) {
@@ -51,28 +51,22 @@
     data = Object.values(filtered_data)
     return data;
   }
-
-  // testing some things
-  // filtered_data = Object.values(filter_data(date_sort(parsed), 1990, 2025))
-  // console.log(filtered_data)
-  // console.log(Object.entries(filtered_data))
-  // console.log(Object.entries(data))
-  //console.log(decades)
 </script>
 
 <main>
-  <h1>Global Sea Surface Temperature Trends</h1>
+  <h1>Record-Breaking Heat is Breaking our Planet</h1>
+  <h2>Just one of many signs of a rapidly changing planet, sea surface temperature data collected since 1979 indicates that our oceans are experiencing record warming.</h2>
   <div class="container">
     <div class="wrapper">
       <Temperature {data} />
     </div>
     <div class="content">
-      <p>Type the years here:</p>
+      <p>Filter by year here:</p>
       <input 
-        placeholder="Start Year" 
+        placeholder="Start Year (1979)" 
         bind:value={start_year_text} />
       <input 
-        placeholder="End Year"
+        placeholder="End Year (2024)"
         bind:value={end_year_text} />
       <button on:click={filter_data(data_dict, start_year_text, end_year_text)}>
       Filter
@@ -113,6 +107,12 @@
 
   h1 {
     font-size: 1.5em;
+    font-weight: 300;
+    line-height: 2;
+  }
+
+  h2 {
+    font-size: 0.64em;
     font-weight: 300;
     line-height: 2;
   }

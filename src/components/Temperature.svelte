@@ -10,6 +10,12 @@
   const marginRight = 30;
   const marginBottom = 35;
   const marginLeft = 58;
+  
+  let hovered = -1;
+  let recorded_mouse_position = {
+		x: 0, y: 0
+	};
+
 
   let gx;
   let gy;
@@ -57,6 +63,7 @@
       y: y(lastPoint.value)
     };
   }
+
   function showTooltip(event, yearData) {
     const [year, value] = [yearData[0].date.getUTCFullYear(), yearData[yearData.length - 1].value]; // Example: year and the last value
     tooltip.innerHTML = `Year: ${year}<br>Value: ${value}`;
@@ -90,9 +97,9 @@
         stroke={color(i)}
         stroke-width="3"
         d={lineGenerator(yearData)} 
-        on:mouseover={event => showTooltip(event, yearData)}
-        on:mousemove={event => showTooltip(event, yearData)}
-        on:mouseout={hideTooltip}
+        on:mouseover={(event) => { hovered = i; }}
+        on:mousemove={(event) => { hovered = i; }}
+        on:mouseout={(event) => { hovered = -1; }}
       />
     {/each}
 
@@ -108,4 +115,12 @@
       font-size=14
       >Month</text>
   </svg>
+  <div
+		class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}	
+	>
+		{#if hovered !== -1}
+			{hovered + 1979}
+		{/if}
+	</div>
+
 </div>
