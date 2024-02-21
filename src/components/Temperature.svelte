@@ -59,7 +59,7 @@
   function getLabelPosition(data) {
     const lastPoint = data[data.length - 1];
     return {
-      x: x(new Date(2000, lastPoint.date.getUTCMonth(), lastPoint.date.getUTCDate())),
+      X: X(new Date(2000, lastPoint.date.getUTCMonth(), lastPoint.date.getUTCDate())),
       y: y(lastPoint.value)
     };
   }
@@ -97,8 +97,13 @@
         stroke={color(i)}
         stroke-width="3"
         d={lineGenerator(yearData)} 
-        on:mouseover={(event) => { hovered = i; }}
-        on:mousemove={(event) => { hovered = i; }}
+        on:mouseover={(event) => { 
+          hovered = i; 
+          recorded_mouse_position = {
+							x: event.pageX,
+							y: event.pageY
+						}
+        }}
         on:mouseout={(event) => { hovered = -1; }}
       />
     {/each}
@@ -117,6 +122,7 @@
   </svg>
   <div
 		class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}	
+    style="left: {recorded_mouse_position.x + 10}px; top: {recorded_mouse_position.y + 40}px"
 	>
 		{#if hovered !== -1}
 			{hovered + 1979}
@@ -124,3 +130,27 @@
 	</div>
 
 </div>
+
+<style>
+	/* dynamic classes for the tooltip */
+	.tooltip-hidden {
+		visibility: hidden;
+		font-family: "Nunito", sans-serif;
+		width: 200px;
+		position: absolute;
+	}
+
+	.tooltip-visible {
+		font: 18px sans-serif;
+		font-family: "Nunito", sans-serif;
+		visibility: visible;
+		background-color: #F5F5F4;
+		border-radius: 10px;
+		width: 50px;
+		color: black;
+		position: absolute;
+		padding: 10px;
+    border: 2px solid #2A2826;
+
+	}
+</style>
