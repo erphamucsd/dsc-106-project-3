@@ -3,6 +3,7 @@
 
   // Assuming data is an array of arrays where each inner array represents data for a different year
   export let data;
+  export let start_year_text;
 
   const width = 800;
   const height = 440;
@@ -10,12 +11,13 @@
   const marginRight = 30;
   const marginBottom = 35;
   const marginLeft = 58;
-  
+
   let hovered = -1;
   let recorded_mouse_position = {
 		x: 0, y: 0
 	};
-
+  
+  $: start = parseInt(start_year_text)
 
   let gx;
   let gy;
@@ -54,27 +56,6 @@
     if (gx) d3.select(gx).call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b"))); // Set the tick format to display only the month abbreviation
     if (gy) d3.select(gy).call(d3.axisLeft(y));
   }
-
-  // Function to get the label position for the last point of each line
-  function getLabelPosition(data) {
-    const lastPoint = data[data.length - 1];
-    return {
-      X: X(new Date(2000, lastPoint.date.getUTCMonth(), lastPoint.date.getUTCDate())),
-      y: y(lastPoint.value)
-    };
-  }
-
-  function showTooltip(event, yearData) {
-    const [year, value] = [yearData[0].date.getUTCFullYear(), yearData[yearData.length - 1].value]; // Example: year and the last value
-    tooltip.innerHTML = `Year: ${year}<br>Value: ${value}`;
-    tooltip.style.visibility = 'visible';
-    tooltip.style.left = `${event.pageX + 15}px`;
-    tooltip.style.top = `${event.pageY + 15}px`;
-  }
-
-  function hideTooltip() {
-    tooltip.style.visibility = 'hidden';
-  }
 </script>
 
 <div class="temperature-plot">
@@ -95,7 +76,7 @@
         key={i}
         fill="none"
         stroke={color(i)}
-        stroke-width="3"
+        stroke-width="4"
         d={lineGenerator(yearData)} 
         on:mouseover={(event) => { 
           hovered = i; 
@@ -122,10 +103,10 @@
   </svg>
   <div
 		class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}	
-    style="left: {recorded_mouse_position.x + 10}px; top: {recorded_mouse_position.y + 40}px"
+    style="left: {recorded_mouse_position.x + 10}px; top: {recorded_mouse_position.y}px"
 	>
 		{#if hovered !== -1}
-			{hovered + 1979}
+			{hovered + start}
 		{/if}
 	</div>
 

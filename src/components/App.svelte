@@ -4,10 +4,9 @@
   import Temperature from './Temperature.svelte';
  
   let data = [];
-  let plotting_data = [];
   let data_dict = [];
-  let start_year_text = "";
-  let end_year_text = "";
+  let start_year_text = "1979";
+  let end_year_text = "2024";
 
   onMount(async () => {
   const res = await fetch(
@@ -58,7 +57,7 @@
   <h3>Just one of many signs of a rapidly changing planet, sea surface temperature data collected since 1979 indicates that our oceans are experiencing record warming.</h3>
   <div class="container">
     <div class="wrapper">
-      <Temperature {data} />
+      <Temperature {data} {start_year_text} />
     </div>
     <div class="content">
       <h6>Filter by year here:</h6>
