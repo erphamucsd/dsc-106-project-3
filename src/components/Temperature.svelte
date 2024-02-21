@@ -16,11 +16,11 @@
   let recorded_mouse_position = {
 		x: 0, y: 0
 	};
-  
-  $: start = parseInt(start_year_text)
 
   let gx;
   let gy;
+
+  $: start = parseInt(start_year_text)
   
   // Domain spans 2000 only so that we can use a base year to place all the lines
   $: x = d3
@@ -76,7 +76,7 @@
         key={i}
         fill="none"
         stroke={color(i)}
-        stroke-width="4"
+        stroke-width="3.6"
         d={lineGenerator(yearData)} 
         on:mouseover={(event) => { 
           hovered = i; 

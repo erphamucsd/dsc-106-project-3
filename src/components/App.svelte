@@ -53,8 +53,8 @@
 </script>
 
 <main>
-  <h1>Record-Breaking Heat is Breaking our Planet</h1>
-  <h3>Just one of many signs of a rapidly changing planet, sea surface temperature data collected since 1979 indicates that our oceans are experiencing record warming.</h3>
+  <h1>Record-Breaking Heat: Signs of a Breaking Planet</h1>
+  <h3>Just one of many indicators of a broken planet, sea surface temperature data indicates that our oceans are experiencing record warming.</h3>
   <div class="container">
     <div class="wrapper">
       <Temperature {data} {start_year_text} />
