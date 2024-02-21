@@ -1,5 +1,9 @@
 # Exploration of Global Sea Surface Temperatures
 By Vanessa Hu, Eric Pham, Katelyn Wong
 
-The purpose of this visualization is for the user to examine the trends of global sea surface temperatures throughout the past century of data (1978-2024). The user can filter out various years and explore patterns of temperature throughout each year and compare the monthly temperature changes per year.
-Data obtained from https://sites.ecmwf.int/data/c3sci/era5-daily/data/
+Visualization Purpose:
+This visualization aims to analyze the trends in global sea surface temperatures over the past century (1978-2024). Users can filter specific years to explore temperature patterns annually and compare monthly temperature changes per year.
+
+Data Source:
+The data utilized for this visualization is sourced from [ECMWF's ERA5 Daily dataset]([https://link-url-here.org](https://sites.ecmwf.int/data/c3sci/era5-daily/data/)https://sites.ecmwf.int/data/c3sci/era5-daily/data/).
+
